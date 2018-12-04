@@ -62,11 +62,12 @@ def run_producer(setup = None, custom_crop = None, server = {"server": None, "po
         "region": "quillow", #"ddr",
         "ref_mmk_type": "stt",
         "start_row": "0",
-        "end_row": "-1",
+        "end_row": "0", #"-1",
         "start_year": "1991",
         "end_year": "2012",
         "crop_rotation": "1017pi,1013n", # "1017ci"
         "climate_scenario": "A1B",
+        
         "return_corn_units": False,
         "use_dev_trend": False,
         "trend_base_year": "2005",
@@ -224,12 +225,13 @@ def run_producer(setup = None, custom_crop = None, server = {"server": None, "po
     xllcorner = int(ref_metadata["xllcorner"])
     yllcorner = int(ref_metadata["yllcorner"])
 
+    no_of_datacells = 0
     for rrow in xrange(0, rrows):
-        print rrow,
+        #print rrow,
 
         if rrow < int(config["start_row"]):
             continue
-        elif int(config["end_row"]) > 0 and srow > int(config["end_row"]):
+        elif int(config["end_row"]) >= 0 and rrow > int(config["end_row"]):
             break
 
         for rcol in xrange(0, rcols):
@@ -268,10 +270,17 @@ def run_producer(setup = None, custom_crop = None, server = {"server": None, "po
             env_template["pathToClimateCSV"] = path_to_yieldstat_climate_dir + "dwd/csvs/germany/row-" + str(crow+1) + "/col-" + str(ccol+1) + ".csv"
             #print env_template["pathToClimateCSV"]
 
+            no_of_datacells += 1
+
             env_template["customId"] = {
                 "row": rrow, "col": rcol,
                 "crow": crow, "ccol": ccol
             }
+
+            is_last_row = rrow == rrows-1 or rrow == int(config["end_row"])
+            if is_last_row and rcol == rcols-1:
+                env_template["customId"]["ndatacells"] = no_of_datacells
+                print "attached no-of-datacells:", env_template["customId"]
 
             socket.send_json(env_template)
             #print env_template
