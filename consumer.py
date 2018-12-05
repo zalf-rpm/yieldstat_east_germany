@@ -39,7 +39,7 @@ PATHS = {
     }
 }
 
-def run_consumer(path_to_output_dir = None, leave_after_finished_run = True, server = {"server": None, "port": None, "nd-port": None}, shared_id = None):
+def run_consumer(path_to_output_dir = None, server = {"server": None, "port": None}, shared_id = None):
     "collect data from workers"
 
     config = {
@@ -49,9 +49,9 @@ def run_consumer(path_to_output_dir = None, leave_after_finished_run = True, ser
         "region": "quillow", #"ddr",
         "ref_mmk_type": "stt",
         "start_row": "0",
-        "end_row": "0", #"-1",
+        "end_row": "-1",
         "shared_id": shared_id,
-        "out": "out/" #None,
+        "out": path_to_output_dir if path_to_output_dir else "out/" #None,
     }
     if len(sys.argv) > 1 and __name__ == "__main__":
         for arg in sys.argv[1:]:

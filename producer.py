@@ -43,12 +43,10 @@ PATHS = {
     "berg": {
         "local_path_to_data_dir": "D:/",
         "cluster_path_to_data_dir": "/archiv-daten/md/data/",
-        "local_path_to_output_dir": "out/",
-        "cluster_path_to_output_dir": "out/"
     }
 }
 
-def run_producer(setup = None, custom_crop = None, server = {"server": None, "port": None, "nd-port": None}, shared_id = None):
+def run_producer(server = {"server": None, "port": None}, shared_id = None):
     "main"
 
     context = zmq.Context()
@@ -62,12 +60,11 @@ def run_producer(setup = None, custom_crop = None, server = {"server": None, "po
         "region": "quillow", #"ddr",
         "ref_mmk_type": "stt",
         "start_row": "0",
-        "end_row": "0", #"-1",
+        "end_row": "-1",
         "start_year": "1991",
         "end_year": "2012",
         "crop_rotation": "1017pi,1013n", # "1017ci"
         "climate_scenario": "A1B",
-        
         "return_corn_units": False,
         "use_dev_trend": False,
         "trend_base_year": "2005",
