@@ -42,7 +42,11 @@ LOCAL_YIELDSTAT = True
 PATHS = {
     "berg": {
         "local_path_to_data_dir": "D:/",
-        "cluster_path_to_data_dir": "/archiv-daten/md/data/",
+        "cluster_path_to_data_dir": "/data/archiv-daten/md/data/",
+    },
+    "sanny": {
+        "local_path_to_data_dir": "Y:/data/",
+        "cluster_path_to_data_dir": "/data/archiv-daten/md/data/",
     }
 }
 
@@ -78,6 +82,8 @@ def run_producer(server = {"server": None, "port": None}, shared_id = None):
             k, v = arg.split("=")
             if k in config:
                 config[k] = v
+                if k == "server" and v.startswith("cluster") :
+                    LOCAL_YIELDSTAT = False
 
     print "config:", config
 
@@ -281,7 +287,7 @@ def run_producer(server = {"server": None, "port": None}, shared_id = None):
 
             socket.send_json(env_template)
             #print env_template
-            print "sent env ", sent_env_count, " customId: ", env_template["customId"]
+            print("sent env ", sent_env_count, " customId: ", env_template["customId"])
             #exit()
             sent_env_count += 1
 

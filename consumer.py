@@ -33,7 +33,13 @@ LOCAL_CONSUMER = True
 PATHS = {
     "berg": {
         "local_path_to_data_dir": "D:/",
-        "cluster_path_to_data_dir": "/archiv-daten/md/data/",
+        "cluster_path_to_data_dir": "/data/archiv-daten/md/data/",
+        "local_path_to_output_dir": "out/",
+        "cluster_path_to_output_dir": "out/"
+    },
+    "sanny": {
+        "local_path_to_data_dir": "Y:/data/",
+        "cluster_path_to_data_dir": "/data/archiv-daten/md/data/",
         "local_path_to_output_dir": "out/",
         "cluster_path_to_output_dir": "out/"
     }
@@ -62,7 +68,7 @@ def run_consumer(path_to_output_dir = None, server = {"server": None, "port": No
     paths = PATHS[config["user"]]
     path_to_data_dir = paths["local_path_to_data_dir"] if LOCAL_CONSUMER else paths["cluster_path_to_data_dir"]
 
-    print "consumer config:", config
+    print("consumer config:", config)
 
     context = zmq.Context()
     if config["shared_id"]:
@@ -91,7 +97,7 @@ def run_consumer(path_to_output_dir = None, server = {"server": None, "port": No
         return metadata, header_str
 
     template_metadata, template_header = read_header(path_to_data_dir + config["region"] + "/" + config["ref_mmk_type"] + "_" + config["region"] + "_100_gk5.asc")
-    print "read template metadata from:", path_to_data_dir + config["region"] + "/" + config["ref_mmk_type"] + "_" + config["region"] + "_100_gk5.asc"
+    print("read template metadata from:", path_to_data_dir + config["region"] + "/" + config["ref_mmk_type"] + "_" + config["region"] + "_100_gk5.asc")
 
     start_row = int(config["start_row"])
     end_row = int(config["end_row"])
@@ -107,7 +113,7 @@ def run_consumer(path_to_output_dir = None, server = {"server": None, "port": No
         leave = False
 
         if msg["type"] == "finish":
-            print "c: received finish message"
+            print("c: received finish message")
             leave = True
 
         elif not write_normal_output_files:
@@ -123,10 +129,10 @@ def run_consumer(path_to_output_dir = None, server = {"server": None, "port": No
             
             leave = process_message.no_of_datacells == process_message.received_env_count
 
-            print "env-count/no-datacells:", process_message.received_env_count, "/", process_message.no_of_datacells, ", leave:", leave
+            print("env-count/no-datacells:", process_message.received_env_count, "/", process_message.no_of_datacells, ", leave:", leave)
 
             if msg["runFailed"]:
-                print "run with customId:", custom_id, "failed. Reason:", msg["reasonForRunFailed"]
+                print("run with customId:", custom_id, "failed. Reason:", msg["reasonForRunFailed"])
                 return leave
 
             for year, crop_result in msg["year2cropResult"].iteritems():
@@ -141,8 +147,8 @@ def run_consumer(path_to_output_dir = None, server = {"server": None, "port": No
             process_message.received_env_count += 1
             
             #print "received work result ", process_message.received_env_count, " customId: ", str(msg.get("customId", "").values())
-            print process_message.received_env_count,
-            print msg
+            print(process_message.received_env_count)
+            print(msg)
 
         return leave
 
@@ -172,7 +178,7 @@ def run_consumer(path_to_output_dir = None, server = {"server": None, "port": No
         np.savetxt(config["out"] + res_id + "_avg.asc", avg, delimiter=" ", fmt="%.2f", header=template_header.strip(), comments="")
 
 
-    print "exiting run_consumer()"
+    print("exiting run_consumer()")
     #debug_file.close()
 
 if __name__ == "__main__":
