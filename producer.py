@@ -37,7 +37,7 @@ from scipy.interpolate import NearestNDInterpolator
 from pyproj import Proj, transform
 
 LOCAL_PRODUCER = True
-LOCAL_YIELDSTAT = True
+#LOCAL_YIELDSTAT = True
 
 PATHS = {
     "berg": {
@@ -76,6 +76,7 @@ def run_producer(server = {"server": None, "port": None}, shared_id = None):
         "get_dry_year_water_need": False,
         "debug_mode": False
     }
+    LOCAL_YIELDSTAT = True
     # read commandline args only if script is invoked directly from commandline
     if len(sys.argv) > 1 and __name__ == "__main__":
         for arg in sys.argv[1:]:
